@@ -17,7 +17,7 @@ export function TeamRegistration({ eventId }: { eventId: string }) {
   const [codes, setCodes] = useState<string[]>(["", "", ""]);
   const [scan, setScan] = useState(false);
   const [busy, setBusy] = useState(false);
-  const { data: eventTeams = [] } = useQuery({
+  const teamLimitsQuery = useQuery({
     queryKey: ["event-team-limits", eventId], staleTime: 60000,
     queryFn: async () => {
       const { data, error } = await supabase.from("events").select("team_min,team_max").eq("id", eventId).single();
@@ -25,9 +25,14 @@ export function TeamRegistration({ eventId }: { eventId: string }) {
       return data;
     },
   });
-  const teamMin = limits?.team_min ?? 1;
-  const teamMax = limits?.team_max ?? 3;
+  const teamMin = teamLimitsQuery.data?.team_min ?? 1;
+  const teamMax = teamLimitsQuery.data?.team_max ?? 3;
   useEffect(() => { setCodes((c) => resizeSlots(c, teamMax)); }, [teamMax]);
+  const eventTeamsQuery = useQuery({
+    queryKey: ["event-teams", eventId], staleTime: 15000, refetchInterval: 15000, refetchIntervalInBackground: false,
+    queryFn: () => loadEventTeams(eventId),
+  });
+  const eventTeams = eventTeamsQuery.data ?? [];
   const addScanned = (raw: string) => setCodes((c) => {
     const v = raw.trim().toUpperCase();
     if (!v || c.includes(v)) return c;
