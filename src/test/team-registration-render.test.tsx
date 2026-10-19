@@ -26,4 +26,21 @@ describe("team registration render regression", () => {
     }] });
     expect(() => renderToString(<TeamRegistration eventId="sequel" />)).not.toThrow();
   });
+  it("renders safely when the limits or teams request fails", () => {
+    useQuery.mockReturnValue({ data: undefined, error: new Error("Access denied") });
+    expect(() => renderToString(<TeamRegistration eventId="sequel" />)).not.toThrow();
+  });
+
+  it.each([
+    ["cluedo", 3, 5],
+    ["logic-lockdown", 1, 3],
+    ["brainbid", 1, 3],
+    ["sequel", 1, 2],
+    ["acm", 2, 3],
+  ])("renders loaded limits for %s without undeclared variables", (eventId, team_min, team_max) => {
+    useQuery.mockReturnValueOnce({ data: { team_min, team_max } });
+    useQuery.mockReturnValueOnce({ data: [] });
+    expect(() => renderToString(<TeamRegistration eventId={eventId} />)).not.toThrow();
+  });
+});
 });
