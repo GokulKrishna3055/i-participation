@@ -1,5 +1,5 @@
 # Verified event participation
-- [ ] Correct undefined team members using the authorised registration snapshot and verify member lookup.
+- [x] Use an explicit eventTeams query result throughout TeamRegistration; nine targeted tests pass and build OK. Reported deployed bundle unavailable; live assigned-organiser verification still requires an authorised session.
 
 - [x] Correct organiser signup/login; verify signup, pending assignment, sign-in, reloads, wrong-portal rejection, and independent tabs/browser contexts. Seven targeted tests pass; temporary test account removed.
 - [x] Consolidate downloads into one consistent registration workbook with a master student sheet and authorised event sheets; five workbook tests pass.
