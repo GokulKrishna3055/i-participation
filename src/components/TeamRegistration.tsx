@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Camera, Users, X } from "lucide-react";
 import { toast } from "sonner";
@@ -7,49 +7,56 @@ import { QrScanner } from "@/components/QrScanner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { loadEventTeams } from "@/lib/event-teams";
+import { resizeSlots, teamSizeLabel } from "@/lib/team-size";
 
 
-type R = { status: string; team_code?: string; members?: number; name?: string; roll?: string; event_title?: string; code?: string };
+type R = { status: string; team_code?: string; members?: number; name?: string; roll?: string; event_title?: string; code?: string; min?: number; max?: number };
 
 export function TeamRegistration({ eventId }: { eventId: string }) {
   const qc = useQueryClient();
-  const [codes, setCodes] = useState(["", "", ""]);
+  const [codes, setCodes] = useState<string[]>(["", "", ""]);
   const [scan, setScan] = useState(false);
   const [busy, setBusy] = useState(false);
-  const { data: teams = [] } = useQuery({
-    queryKey: ["event-teams", eventId], staleTime: 15000, refetchInterval: 15000, refetchIntervalInBackground: false,
-    queryFn: () => loadEventTeams(eventId),
-
+  const { data: limits } = useQuery({
+    queryKey: ["event-team-limits", eventId], staleTime: 60000,
+    queryFn: async () => {
+      const { data, error } = await supabase.from("events").select("team_min,team_max").eq("id", eventId).single();
+      if (error) throw error;
+      return data;
+    },
   });
+  const teamMin = limits?.team_min ?? 1;
+  const teamMax = limits?.team_max ?? 3;
+  useEffect(() => { setCodes((c) => resizeSlots(c, teamMax)); }, [teamMax]);
   const addScanned = (raw: string) => setCodes((c) => {
     const v = raw.trim().toUpperCase();
     if (!v || c.includes(v)) return c;
     const i = c.findIndex((x) => !x);
-    if (i < 0) { toast.info("Team already has 3 members"); return c; }
+    if (i < 0) { toast.info(`Team already has ${teamMax} members`); return c; }
     const n = [...c]; n[i] = v; toast.success(`Added ${v}`); return n;
   });
   async function submit() {
     const list = codes.map((c) => c.trim().toUpperCase()).filter(Boolean);
-    if (!list.length) { toast.error("Add at least one member code"); return; }
+    if (list.length < teamMin) { toast.error(`This event needs ${teamSizeLabel(teamMin, teamMax)}`); return; }
     if (new Set(list).size !== list.length) { toast.error("Same code entered twice"); return; }
     setBusy(true);
     try {
       const { data, error } = await supabase.rpc("register_team", { _event_id: eventId, _codes: list });
       if (error) throw error;
       const r = data as R;
-      if (r.status === "ok") { toast.success(`Team ${r.team_code} registered · ${r.members} member(s) present`); setCodes(["", "", ""]); setScan(false); }
+      if (r.status === "ok") { toast.success(`Team ${r.team_code} registered · ${r.members} member(s) present`); setCodes(resizeSlots([], teamMax)); setScan(false); }
       else if (r.status === "locked") toast.warning(`${r.name} (${r.roll}) is in ${r.event_title} — release them first`);
       else if (r.status === "in_team") toast.warning(`${r.name} (${r.roll}) is already in team ${r.team_code} for this event`);
       else if (r.status === "unknown_code") toast.error(`No student with code ${r.code}`);
       else if (r.status === "not_student") toast.error(`${r.name} is not a student account`);
-      else if (r.status === "bad_size") toast.error("A team needs 1 to 3 members");
+      else if (r.status === "bad_size") toast.error(`This event needs ${teamSizeLabel(r.min ?? teamMin, r.max ?? teamMax)}`);
       else toast.error("You are not allowed to register teams for this event");
       await Promise.all(["event-teams", "event-roster"].map((k) => qc.invalidateQueries({ queryKey: [k, eventId] })));
       qc.invalidateQueries({ queryKey: ["leaderboard"] });
     } catch (e) { toast.error((e as Error).message); } finally { setBusy(false); }
   }
   return <div className="glass mt-4 rounded-lg p-5">
-    <h3 className="flex items-center gap-2 font-semibold"><Users className="h-4 w-4" /> Register a team (1–3 members)</h3>
+    <h3 className="flex items-center gap-2 font-semibold"><Users className="h-4 w-4" /> Register a team ({teamSizeLabel(teamMin, teamMax)})</h3>
     <p className="text-sm text-muted-foreground">Scan or type each member's code. The team gets an ID, and every member is registered, marked present and locked here.</p>
     <div className="mt-3 grid gap-2 sm:grid-cols-3">{codes.map((c, i) => <div key={i}><label className="mb-1 block text-xs text-muted-foreground">Member {i + 1} code</label><div className="flex gap-1">
       <Input value={c} onChange={(e) => setCodes((p) => p.map((x, j) => j === i ? e.target.value.toUpperCase() : x))} aria-label={`Member ${i + 1} code`} maxLength={12} className="font-mono uppercase" />
