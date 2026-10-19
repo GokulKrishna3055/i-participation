@@ -1,5 +1,5 @@
 # Verified event participation
-- [x] Use an explicit eventTeams query result throughout TeamRegistration; nine targeted tests pass and build OK. Reported deployed bundle unavailable; live assigned-organiser verification still requires an authorised session.
+- [x] Replace destructured limits/team query aliases with explicit query objects in TeamRegistration; 15 targeted tests pass and build OK. Browser session redirects to sign-in, so live assigned-organiser verification and the reported Vercel bundle remain unverified.
 
 - [x] Correct organiser signup/login; verify signup, pending assignment, sign-in, reloads, wrong-portal rejection, and independent tabs/browser contexts. Seven targeted tests pass; temporary test account removed.
 - [x] Consolidate downloads into one consistent registration workbook with a master student sheet and authorised event sheets; five workbook tests pass.
