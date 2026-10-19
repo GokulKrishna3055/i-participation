@@ -108,7 +108,7 @@ function Index() {
               )}
               {e.timing_note && <p className="mt-1 text-xs text-primary">⏳ {e.timing_note}</p>}
               {e.poc && <p className="mt-3 flex items-start gap-1.5 text-xs text-muted-foreground"><Phone className="mt-0.5 h-3.5 w-3.5 shrink-0 text-ghost" />{e.poc}</p>}
-              <EventRegistration eventId={e.id} title={e.title} />
+              
             </article>
           ))}
           {events?.length === 0 && <p className="text-muted-foreground">Events will rise soon…</p>}
