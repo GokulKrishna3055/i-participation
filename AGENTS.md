@@ -20,3 +20,4 @@
 - Attendance is marked by organisers via `mark_attendance_by_code(event, student_code)`: one permanent code per student; the scan auto-registers the student for that event, awards credits once, and locks them to that event (profiles.locked_event_id) until the organiser calls `release_student`.
 - Exactly one admin: a DB trigger rejects any second admin role and signup never grants admin; organiser eligibility comes from profiles.account_type set at organiser signup.
 - Registration exports use one authorised database snapshot RPC and one shared workbook builder; this prevents partial downloads and cross-query concurrency inconsistencies while restricting organiser event data to their assignment.
+- Team lists resolve member names from the authorised registration snapshot rather than nested profile reads, because organisers cannot directly read other users' profiles.
