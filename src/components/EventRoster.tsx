@@ -63,9 +63,7 @@ export function EventRoster({ eventId }: { eventId: string }) {
   }
 
   return <section className="mt-6">
-    <div className="glass rounded-lg p-5">
-      
-    </div>
+    
     <TeamRegistration eventId={eventId} />
     <div className="mt-6 flex flex-wrap items-center justify-between gap-2"><h3 className="font-semibold">Students</h3>
       <Button variant="outline" size="sm" disabled={exporting} onClick={async () => { setExporting(true); try { await exportAllExcel(); } catch (e) { toast.error((e as Error).message); } finally { setExporting(false); } }}><Download className="h-4 w-4" />{exporting ? "Exporting…" : "Export registration workbook"}</Button>
