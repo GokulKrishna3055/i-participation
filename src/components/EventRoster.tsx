@@ -64,14 +64,7 @@ export function EventRoster({ eventId }: { eventId: string }) {
 
   return <section className="mt-6">
     <div className="glass rounded-lg p-5">
-      <h3 className="font-semibold">Mark attendance</h3>
-      <p className="text-sm text-muted-foreground">Scan the student's QR or type their code — this registers them for this event and locks them here until you release them.</p>
-      <form className="mt-3 flex flex-wrap gap-2" onSubmit={(e) => { e.preventDefault(); const f = e.currentTarget; void mark(String(new FormData(f).get("code") ?? "")).then(() => f.reset()); }}>
-        <Input name="code" aria-label="Student attendance code" autoComplete="off" maxLength={12} className="max-w-xs font-mono uppercase" />
-        <Button type="submit" disabled={busy}><Keyboard className="h-4 w-4" />{busy ? "Marking…" : "Mark present"}</Button>
-        <Button type="button" variant="outline" onClick={() => setScanning((v) => !v)}><Camera className="h-4 w-4" />{scanning ? "Close camera" : "Scan QR"}</Button>
-      </form>
-      {scanning && <div className="mt-4"><QrScanner onScan={(t) => void mark(t)} /></div>}
+      
     </div>
     <TeamRegistration eventId={eventId} />
     <div className="mt-6 flex flex-wrap items-center justify-between gap-2"><h3 className="font-semibold">Students</h3>
