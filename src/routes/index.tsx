@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useRef } from "react";
 import { CalendarClock, MapPin, Trophy, ShieldCheck, Skull, Zap, Phone } from "lucide-react";
-import video from "@/assets/haunted-intro.mp4.asset.json";
+import video from "@/assets/haunted-intro.mp4";
 import poster from "@/assets/haunted-poster.jpg.asset.json";
 import { supabase } from "@/lib/supabase-tab";
 import { Button } from "@/components/ui/button";
@@ -54,7 +54,7 @@ function Index() {
       <section className="relative h-[85svh] min-h-[520px] max-h-[760px] overflow-hidden">
         <video
           ref={vid}
-          src={video.url}
+          src={video}
           poster={poster.url}
           autoPlay muted playsInline
           onTimeUpdate={(e) => { const v = e.currentTarget; if (v.currentTime > 6.8) v.currentTime = 0.2; }}
