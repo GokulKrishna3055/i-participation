@@ -17,7 +17,7 @@ export function TeamRegistration({ eventId }: { eventId: string }) {
   const [codes, setCodes] = useState<string[]>(["", "", ""]);
   const [scan, setScan] = useState(false);
   const [busy, setBusy] = useState(false);
-  const { data: limits } = useQuery({
+  const { data: eventTeams = [] } = useQuery({
     queryKey: ["event-team-limits", eventId], staleTime: 60000,
     queryFn: async () => {
       const { data, error } = await supabase.from("events").select("team_min,team_max").eq("id", eventId).single();
@@ -67,6 +67,6 @@ export function TeamRegistration({ eventId }: { eventId: string }) {
       <Button variant="outline" onClick={() => setScan((v) => !v)}><Camera className="h-4 w-4" />{scan ? "Close camera" : "Scan members"}</Button>
     </div>
     {scan && <div className="mt-4"><QrScanner onScan={addScanned} /></div>}
-    {teams.length > 0 && <div className="mt-5 space-y-2"><p className="text-sm font-medium">{teams.length} team(s)</p>{teams.map((t) => <div key={t.id} className="flex flex-wrap items-center gap-2 rounded-md border px-3 py-2 text-sm"><span className="font-mono text-ghost">{t.team_code}</span><span className="text-muted-foreground">{t.members.map((m) => [m.full_name, m.roll_number ? `(${m.roll_number})` : ""].filter(Boolean).join(" ")).join(", ")}</span></div>)}</div>}
+    {eventTeams.length > 0 && <div className="mt-5 space-y-2"><p className="text-sm font-medium">{eventTeams.length} team(s)</p>{eventTeams.map((t) => <div key={t.id} className="flex flex-wrap items-center gap-2 rounded-md border px-3 py-2 text-sm"><span className="font-mono text-ghost">{t.team_code}</span><span className="text-muted-foreground">{t.members.map((m) => [m.full_name, m.roll_number ? `(${m.roll_number})` : ""].filter(Boolean).join(" ")).join(", ")}</span></div>)}</div>}
   </div>;
 }
