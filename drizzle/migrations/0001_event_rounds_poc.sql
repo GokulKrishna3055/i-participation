@@ -1,0 +1,1 @@
+alter table public.events add column if not exists round2_starts_at timestamptz, add column if not exists round2_ends_at timestamptz, add column if not exists poc text, add column if not exists timing_note text;

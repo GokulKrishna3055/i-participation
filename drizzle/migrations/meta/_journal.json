@@ -1,0 +1,104 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1792336884299,
+      "tag": "0000_migration",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1792337585865,
+      "tag": "0001_event_rounds_poc",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792338830174,
+      "tag": "0002_student_registration_and_organiser_awards",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1792340557661,
+      "tag": "0003_verified_event_participation",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792340844679,
+      "tag": "0004_paginated_participation_leaderboard",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1792342616822,
+      "tag": "0005_single_event_attendance_only_organisers",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1792346609589,
+      "tag": "0006_student_attendance_code",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1792348456008,
+      "tag": "0007_single_admin_and_organiser_accounts",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1792349278432,
+      "tag": "0008_leaderboard_students_only",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1792349299153,
+      "tag": "0009_leaderboard_grants_service_role",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1792388648867,
+      "tag": "0010_auto_register_and_event_lock",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1792397970145,
+      "tag": "0011_team_registration",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1792398547155,
+      "tag": "0012_student_contact_fields",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1792399579917,
+      "tag": "0013_consistent_registration_workbook",
+      "breakpoints": true
+    }
+  ]
+}
