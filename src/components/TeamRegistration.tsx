@@ -6,6 +6,8 @@ import { supabase } from "@/lib/supabase-tab";
 import { QrScanner } from "@/components/QrScanner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { loadEventTeams } from "@/lib/event-teams";
+
 
 type R = { status: string; team_code?: string; members?: number; name?: string; roll?: string; event_title?: string; code?: string };
 
@@ -16,10 +18,8 @@ export function TeamRegistration({ eventId }: { eventId: string }) {
   const [busy, setBusy] = useState(false);
   const { data: teams = [] } = useQuery({
     queryKey: ["event-teams", eventId], staleTime: 15000, refetchInterval: 15000, refetchIntervalInBackground: false,
-    queryFn: async () => {
-      const { data, error } = await supabase.from("teams").select("id,team_code,seq,team_members(user_id,profiles(full_name,roll_number))").eq("event_id", eventId).order("seq");
-      if (error) throw error; return data;
-    },
+    queryFn: () => loadEventTeams(eventId),
+
   });
   const addScanned = (raw: string) => setCodes((c) => {
     const v = raw.trim().toUpperCase();
@@ -60,6 +60,6 @@ export function TeamRegistration({ eventId }: { eventId: string }) {
       <Button variant="outline" onClick={() => setScan((v) => !v)}><Camera className="h-4 w-4" />{scan ? "Close camera" : "Scan members"}</Button>
     </div>
     {scan && <div className="mt-4"><QrScanner onScan={addScanned} /></div>}
-    {teams.length > 0 && <div className="mt-5 space-y-2"><p className="text-sm font-medium">{teams.length} team(s)</p>{teams.map((t) => <div key={t.id} className="flex flex-wrap items-center gap-2 rounded-md border px-3 py-2 text-sm"><span className="font-mono text-ghost">{t.team_code}</span><span className="text-muted-foreground">{t.team_members.map((m) => `${m.profiles?.full_name} (${m.profiles?.roll_number})`).join(", ")}</span></div>)}</div>}
+    {teams.length > 0 && <div className="mt-5 space-y-2"><p className="text-sm font-medium">{teams.length} team(s)</p>{teams.map((t) => <div key={t.id} className="flex flex-wrap items-center gap-2 rounded-md border px-3 py-2 text-sm"><span className="font-mono text-ghost">{t.team_code}</span><span className="text-muted-foreground">{t.members.map((m) => [m.full_name, m.roll_number ? `(${m.roll_number})` : ""].filter(Boolean).join(" ")).join(", ")}</span></div>)}</div>}
   </div>;
 }
