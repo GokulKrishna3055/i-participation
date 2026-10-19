@@ -1,4 +1,6 @@
 # Verified event participation
+- [ ] Correct undefined team members using the authorised registration snapshot and verify member lookup.
+
 - [x] Correct organiser signup/login; verify signup, pending assignment, sign-in, reloads, wrong-portal rejection, and independent tabs/browser contexts. Seven targeted tests pass; temporary test account removed.
 - [x] Consolidate downloads into one consistent registration workbook with a master student sheet and authorised event sheets; five workbook tests pass.
 - [ ] Verify the live admin download; injected preview session does not reach the admin workspace, so an active admin session is still required.
