@@ -12,4 +12,4 @@
 - [x] Separate organiser registration into its own page and verify signup.
 - [x] Enforce one event per organiser and attendance-only access.
 - [x] Assign Anitha (2023115066) to SEQUEL and verify attendance and shared leaderboard updates.
-- [ ] Per-event team sizes: CLUEDO 3–5, LOGIC LOCKDOWN 1–3, BRAINBID 1–3, SEQUEL 1–2, others 2–3 — enforce in register_team and show dynamic slots in the organiser page.
+- [x] Per-event team sizes: CLUEDO 3–5, LOGIC LOCKDOWN 1–3, BRAINBID 1–3, SEQUEL 1–2, others 2–3 — enforced in register_team; organiser page shows dynamic slots. 38 tests pass.
